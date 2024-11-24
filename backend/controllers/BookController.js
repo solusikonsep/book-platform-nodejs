@@ -1,6 +1,5 @@
 const connectToMongo = require("../config/connection");
 
-const { db } = connectToMongo();
 
 // Data sementara sebagai pengganti database
 let books = [
@@ -10,12 +9,15 @@ let books = [
   ];
   
   // Fungsi untuk mendapatkan semua buku
-  function getAllBooks(req, res) {
+  async function getAllBooks(req, res) {
 
-    const hasil  = db.collections("books").find().toArray();
+    const { db } = await connectToMongo();
+    const booksCollection = db.collection('books');
+    const books = await booksCollection.find().toArray();
+    
     res.status(200).json({
       message: 'List of all books',
-      data: hasil
+      data: books
     });
   }
   
